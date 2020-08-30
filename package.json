@@ -1,0 +1,49 @@
+{
+  "name": "files.httpreq.club",
+  "version": "1.0.0-beta.1",
+  "description": "The file server for httpreq.club",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development ts-node-dev --rs --clear src/index.ts",
+    "build": "tsc",
+    "start": "node ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/n3oney/files.httpreq.club.git"
+  },
+  "contributors": [
+    "Loron Gröbner <admin@weeb.tech> (https://switchbla.de/)",
+    "Michał Minarowski <neoney@pm.me> (https://neoney.me/)"
+  ],
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/n3oney/files.httpreq.club/issues"
+  },
+  "homepage": "https://github.com/n3oney/files.httpreq.club#readme",
+  "devDependencies": {
+    "@types/cookie-session": "^2.0.41",
+    "@types/cors": "^2.8.7",
+    "@types/dotenv": "^8.2.0",
+    "@types/express": "^4.17.7",
+    "@types/mongodb": "^3.5.26",
+    "@types/multer": "^1.4.4",
+    "@types/uuid": "^8.3.0",
+    "cross-env": "^7.0.2",
+    "ts-node-dev": "^1.0.0-pre.61",
+    "typescript": "^4.0.2"
+  },
+  "dependencies": {
+    "argon2": "^0.27.0",
+    "body-parser": "^1.19.0",
+    "chalk": "^4.1.0",
+    "cookie-session": "^1.4.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "helmet": "^4.1.0",
+    "mongodb": "^3.6.0",
+    "multer": "^2.0.0-rc.2",
+    "uuid": "^8.3.0"
+  }
+}

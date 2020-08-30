@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "incremental": true,
+    "target": "es2015",
+    "module": "commonjs",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "removeComments": true,
+    "strict": true,
+    "alwaysStrict": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  }
+}
