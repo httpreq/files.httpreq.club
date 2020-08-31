@@ -7,6 +7,6 @@ export default class Logger {
     }
 
     static success(...args: any[]) {
-        console.log(chalk.green('✔'), ...args);
+        console.log(chalk.green("✔"), ...args);
     }
 }
