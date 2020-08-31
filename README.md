@@ -1,17 +1,19 @@
-<h1>files.httpreq.club</h1>
-<p>This is the file server of httpreq.club, api routes like logging in, registering and uploading is done in this repository</p>
+# files.httpreq.club
+This is the file server of httpreq.club, api routes like logging in, registering and uploading is done in this repository.  
 
-<h2>Getting started</h2>
+## Getting started
 
-  <h3>Building</h3>
+### Building
+`npm run build`
   
-  <h3>Deploying</h3>
+### Deploying
+`npm start`
 
 
-<h2>How do i contribute?</h2>
-<li>Follow the code style described <a href="#">here</a></li>
-<li>Create a Pull request to the repository</li>
-<li>Wait for it to get approved and the checks being done</li>
+## How do i contribute?
+* Follow the code style described [here](CODE_STYLE.md)
+* Create a Pull request to the repository
+* Wait for it to get approved and the checks being done
 
-<br>
-<p>This repository is licensed under GNU General Public License v3.0</p>
+  
+This repository is licensed under GNU General Public License v3.0
