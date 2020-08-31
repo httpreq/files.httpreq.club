@@ -2,6 +2,7 @@ import {Router} from "express";
 import Global from "../Global";
 import argon from "argon2";
 import {v4} from "uuid";
+import Logger from "../Logger";
 
 const router = Router();
 
@@ -52,5 +53,24 @@ router.post("/register", async (req, res) => {
         res.status(500).end();
     });
 });
+
+
+router.get("/api/auth/getUser", async(req, res) => {
+    let user: any = null;
+    if(req.headers.hasOwnProperty("authorization")) {
+        const users = await Global.db.collection("users").find().toArray();
+        for (let user of users) {
+            if (argon.verify(user.hash, req.headers.authorization!)) {
+                user = user;
+                break;
+            }
+        }
+    }
+    else if (req.session!.hasOwnProperty("userId")) user = await Global.db.collection("users").findOne({ _id: req.session!.userId});
+    else return res.status(401).json({ message: "No way to authorize user" });
+    
+    if (user === null) return res.status(403).json({ message: "Incorrect token" });
+        Logger.debug(user)
+})
 
 export default router;
