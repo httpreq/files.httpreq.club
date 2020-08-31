@@ -39,15 +39,15 @@ app.get("/", (req, res) => {
 
 app.post("/api/auth/login", async (req, res) => {
     if (!req.headers.hasOwnProperty("authorization")) return res.status(401).json({ message: "No way to authorize user" });
-        const users = await Global.db.collection("users").find().toArray();
-        for (let user of users) {
-            if (argon.verify(user.hash, req.headers.authorization!)) {
-                req.session!.username = user.username;
-                req.session!.token = user.token;
-                return res.status(200).json({ message: "Authorization successful" });
-            }
+    const users = await Global.db.collection("users").find().toArray();
+    for (let user of users) {
+        if (argon.verify(user.hash, req.headers.authorization!)) {
+            req.session!.username = user.username;
+            req.session!.token = user.token;
+            return res.status(200).json({ message: "Authorization successful" });
         }
-        return res.status(403).json({ message: "Incorrect token" });
+    }
+    return res.status(403).json({ message: "Incorrect token" });
 })
 
 app.post("/api/auth/register", async (req, res) => {
@@ -101,27 +101,28 @@ app.post("/api/upload", upload.single("file"), async (req, res) => {
                 break;
             }
         }
-        if (userId === null) return res.status(403).json({ message: "Incorrect token" });
-        
-        const bucket = new GridFSBucket(Global.db);
-
-        const id = String(await Global.getNextSequenceValue("fileid"));
-
-        const uploadStream = bucket.openUploadStream(id);
-        const stream = req.file.stream.pipe(uploadStream);
-        stream.on("finish", async () => {
-            await Global.db.collection("files").insertOne({
-                _id: id,
-                userId: userId,
-                fileId: uploadStream.id,
-                mimeType: (req.file as any).detectedMimeType
-            });
-
-            res.status(201).json({
-                address: "/" + id
-            });
-        });
     }
+    
+    if (userId === null) return res.status(403).json({ message: "Incorrect token" });
+
+    const bucket = new GridFSBucket(Global.db);
+
+    const id = String(await Global.getNextSequenceValue("fileid"));
+
+    const uploadStream = bucket.openUploadStream(id);
+    const stream = req.file.stream.pipe(uploadStream);
+    stream.on("finish", async () => {
+        await Global.db.collection("files").insertOne({
+            _id: id,
+            userId: userId,
+            fileId: uploadStream.id,
+            mimeType: (req.file as any).detectedMimeType
+        });
+
+        res.status(201).json({
+            address: "/" + id
+        });
+    });
 });
 
 app.get("/:id", async (req, res) => {
