@@ -37,7 +37,20 @@ app.get("/", (req, res) => {
     });
 });
 
-app.post("/api/register", async (req, res) => {
+app.post("/api/auth/login", async (req, res) => {
+    if (!req.headers.hasOwnProperty("authorization")) return res.status(401).json({ message: "No way to authorize user" });
+        const users = await Global.db.collection("users").find().toArray();
+        for (let user of users) {
+            if (argon.verify(user.hash, req.headers.authorization!)) {
+                req.session!.username = user.username;
+                req.session!.token = user.token;
+                return res.status(200).json({ message: "Authorization successful" });
+            }
+        }
+        return res.status(403).json({ message: "Incorrect token" });
+})
+
+app.post("/api/auth/register", async (req, res) => {
     if (!req.body.hasOwnProperty("username"))
         return res.status(400).json({ message: "No username provided" });
     if (!req.body.hasOwnProperty("email"))
@@ -77,19 +90,19 @@ app.post("/api/upload", upload.single("file"), async (req, res) => {
         return res.status(400).json({ message: "No file to upload" });
 
     let userId: number | null = null;
-    if(req.session!.hasOwnProperty("userId"))
+    if (req.session!.hasOwnProperty("userId"))
         userId = Number(req.session!.userId);
     else {
-        if(!req.headers.hasOwnProperty("authorization")) return res.status(401).json({ message: "No way to authorize user" });
+        if (!req.headers.hasOwnProperty("authorization")) return res.status(401).json({ message: "No way to authorize user" });
         const users = await Global.db.collection("users").find().toArray();
-        for(let user of users) {
-            if(argon.verify(user.hash, req.headers.authorization!)) {
+        for (let user of users) {
+            if (argon.verify(user.hash, req.headers.authorization!)) {
                 userId = user._id;
-                continue;
+                break;
             }
         }
-        if(userId === null) return res.status(403).json({ message: "Incorrect token" });
-
+        if (userId === null) return res.status(403).json({ message: "Incorrect token" });
+        
         const bucket = new GridFSBucket(Global.db);
 
         const id = String(await Global.getNextSequenceValue("fileid"));
@@ -121,7 +134,7 @@ app.get("/:id", async (req, res) => {
         }
     });
 
-    if(!file) return res.status(404).end();
+    if (!file) return res.status(404).end();
 
     res.contentType(file.mimeType as string);
     const bucket = new GridFSBucket(Global.db);
