@@ -1,8 +1,8 @@
 import {Router} from "express";
-import Global from "../Global";
+import Global from "../global";
 import argon from "argon2";
 import {v4} from "uuid";
-import Logger from "../Logger";
+import Logger from "../logger";
 
 const router = Router();
 

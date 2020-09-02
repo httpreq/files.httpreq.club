@@ -1,5 +1,5 @@
 import { MongoClient } from "mongodb";
-import Logger from "./Logger";
+import Logger from "./logger";
 
 if (process.env.NODE_ENV === "development") require("dotenv/config");
 if (!process.env.hasOwnProperty("MONGO")) throw new Error("Environment variable MONGO must be set and must be a MongoDB connection string.");
