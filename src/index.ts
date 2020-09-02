@@ -63,16 +63,23 @@ app.post("/api/upload", upload.single("file"), async (req, res) => {
 
     const uploadStream = bucket.openUploadStream(id);
     const stream = req.file.stream.pipe(uploadStream);
+
+    // Credits to the retention math's : 0x0.st
+
+    const min_age = 7;
+    const max_age = 30;
+    const max_size = 100;
+    const file_size = req.file.size / 1048576;
+    const retention = min_age + (-max_age + min_age) * Math.pow((file_size / max_size - 1), 3);
+    const time_to_live = retention * 86400000;
+
     stream.on("finish", async () => {
         await Global.db.collection("files").insertOne({
             _id: id,
             userId: userId,
             fileId: uploadStream.id,
-            mimeType: (req.file as any).detectedMimeType
-        });
-
-        res.status(201).json({
-            address: "/" + id
+            mimeType: (req.file as any).detectedMimeType,
+            expiry: time_to_live,
         });
     });
 });
