@@ -1,15 +1,18 @@
 import "dotenv/config";
 import argon from "argon2";
 import express from "express";
-import Logger from "./Logger";
+import Logger from "./logger";
 import helmet from "helmet";
 import cors from "cors";
 import multer from "multer";
-import Global from "./Global";
-import Auth from "./Routers/Auth";
+import Global from "./global";
+import Auth from "./Routers/auth";
 import bodyParser from "body-parser";
 import cookieSession from "cookie-session";
 import { GridFSBucket } from "mongodb";
+import {autoDelete} from "./autoDeleter";
+
+setInterval(autoDelete, 60000);
 
 const upload = multer();
 
