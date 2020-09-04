@@ -10,6 +10,9 @@ import Auth from "./Routers/Auth";
 import bodyParser from "body-parser";
 import cookieSession from "cookie-session";
 import { GridFSBucket } from "mongodb";
+import {autoDelete} from "./autoDeleter";
+
+setInterval(autoDelete, 60000);
 
 const upload = multer();
 
@@ -64,11 +67,11 @@ app.post("/api/upload", upload.single("file"), async (req, res) => {
     const uploadStream = bucket.openUploadStream(id);
     const stream = req.file.stream.pipe(uploadStream);
 
-    // Credits to the retention math's : 0x0.st
+    // Credits to the retention maths : 0x0.st
 
-    const min_age = 7;
-    const max_age = 30;
-    const max_size = 100;
+    const min_age = 7; // Days
+    const max_age = 30; // Days
+    const max_size = 100; // Megabytes
     const file_size = req.file.size / 1048576;
     const retention = min_age + (-max_age + min_age) * Math.pow((file_size / max_size - 1), 3);
     const time_to_live = retention * 86400000;
@@ -81,7 +84,6 @@ app.post("/api/upload", upload.single("file"), async (req, res) => {
             mimeType: (req.file as any).detectedMimeType,
             expiry: time_to_live,
         });
-
         res.status(201).json({
             address: "/" + id
         });
