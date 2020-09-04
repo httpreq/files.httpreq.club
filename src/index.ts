@@ -69,12 +69,13 @@ app.post("/api/upload", upload.single("file"), async (req, res) => {
 
     // Credits to the retention maths : 0x0.st
 
-    const min_age = 7; // Days
-    const max_age = 30; // Days
-    const max_size = 100; // Megabytes
-    const file_size = req.file.size / 1048576;
-    const retention = min_age + (-max_age + min_age) * Math.pow((file_size / max_size - 1), 3);
-    const time_to_live = retention * 86400000;
+    const minAge = 7; // Days
+    const maxAge = 30; // Days
+    const maxSize = 100; // Megabytes
+    const fileSize = req.file.size / 1048576;
+    console.log(fileSize);
+    const retention = minAge + (-maxAge + minAge) * Math.pow((fileSize / maxSize - 1), 3);
+    const time_to_live = Date.now() + (retention * 86400000);
 
     stream.on("finish", async () => {
         await Global.db.collection("files").insertOne({
