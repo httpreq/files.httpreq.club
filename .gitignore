@@ -5,4 +5,4 @@ dist/
 tsconfig.tsbuildinfo
 
 .vscode/
-files.httpreq.club.code-workspace
+*.code-workspace
