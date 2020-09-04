@@ -9,6 +9,6 @@
 * use one `let` or `const` per variable
 * do not use `console` for logging, instead use [Logger.ts](src/Logger.ts)
   * exception: `console.table`, `console.time` and `console.trace`
-* name variables/files are using camelCase
-  * exception: classes - they should use UpperCamelCase
+* variables/file names are using camelCase
+  * exception: classes - they should use UpperCamelCase, that includes files that export just a class
 * do not type parameters as `any` unless you explicitly mean that (example: [Logger.ts](src/Logger.ts))
