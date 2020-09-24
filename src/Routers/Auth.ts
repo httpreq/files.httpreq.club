@@ -19,6 +19,29 @@ router.post("/login", async (req, res) => {
     return res.status(403).json({ message: "Incorrect token" });
 });
 
+router.delete("/deleteUser", async (req, res) => {
+    if (!req.headers.hasOwnProperty("authorization")) return res.status(401).json({ message: "No way to authorize user" });
+
+    const users = await Global.db.collection("users").find().toArray();
+
+    for (let user of users) {
+
+        if (await argon.verify(user.hash, req.headers.authorization!)) {
+            req.session!.username = user.username;
+            req.session!.token = user.token;
+
+            console.log(await Global.db.collection("users").findOne({_id: user._id}));
+
+
+            await Global.db.collection("users").deleteOne({_id: user._id});
+
+            return res.status(200).json({ message: "User deleted" });
+        }
+    }   
+
+    return res.status(403).json({ message: "Incorrect token" });
+});
+
 router.post("/register", async (req, res) => {
     if (!req.body.hasOwnProperty("username"))
         return res.status(400).json({ message: "No username provided" });
