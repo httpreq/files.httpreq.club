@@ -8,6 +8,7 @@ import express from 'express';
 import helmet from 'helmet';
 import {GridFSBucket} from 'mongodb';
 import multer from 'multer';
+import randomstring from "randomstring";
 
 import {autoDelete} from './autoDeleter';
 import Global from './Global';
@@ -64,7 +65,13 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
 
   const bucket = new GridFSBucket(Global.db);
 
-  const id = String(await Global.getNextSequenceValue('fileid'));
+  let id = randomstring.generate(16);
+
+  const idf = await Global.db.collection('files').find({_id: id}).count();
+
+  if(idf >= 1) {
+    id = randomstring.generate(16);
+  }
 
   const uploadStream = bucket.openUploadStream(id);
   const stream = req.file.stream.pipe(uploadStream);
