@@ -87,7 +87,10 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
       minAge + (-maxAge + minAge) * Math.pow((fileSize / maxSize - 1), 3);
   const time_to_live = Date.now() + (retention * 86400000);
 
-  const type = (req.file as any).detectedMimeType;
+  let type = (req.file as any).detectedMimeType;
+
+  /* text fix */
+  if(!type) type = "text/plain";
 
   switch(type) {
     case "application":
