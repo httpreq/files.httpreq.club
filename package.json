@@ -23,7 +23,7 @@
   "homepage": "https://github.com/n3oney/files.httpreq.club#readme",
   "devDependencies": {
     "@types/cookie-session": "^2.0.42",
-    "@types/cors": "^2.8.8",
+    "@types/cors": "^2.8.10",
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.11",
     "@types/mongodb": "^3.5.34",
